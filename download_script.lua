@@ -4,8 +4,8 @@ if not http then
     return
 end
  
-local function get(sUrl)
-    local ok, err = http.checkURL(sUrl)
+local function get(url)
+    local ok, err = http.checkURL(url)
     if not ok then
         print("Failed.")
         if err then
@@ -14,7 +14,7 @@ local function get(sUrl)
         return nil
     end
 
-    local response = http.get(sUrl, nil, true)
+    local response = http.get(url, nil, true)
     if not response then
         print("Failed.")
         return nil
@@ -26,13 +26,14 @@ local function get(sUrl)
 end
  
 -- Determine file to download
-local sFile = tArgs[1]
-local sUrl = "https://raw.githubusercontent.com/ChandlerSwift/computercraft-scripts/master/" .. sFile
+local args = {...}
+local filename = args[1]
+local url = "https://raw.githubusercontent.com/ChandlerSwift/computercraft-scripts/master/" .. filename
 
 -- Do the get
-local res = get(sUrl)
+local res = get(url)
 if res then
-    local file = fs.open(sPath, "wb")
+    local file = fs.open(shell.resolve(filename), "w")
     file.write(res)
     file.close()
 end
