@@ -65,7 +65,7 @@ while true do
     -- deposit items into chest
     turtle.turnLeft()
     turtle.turnLeft()
-    assert(turtle.advance())
+    assert(turtle.forward())
 
     -- in minecraft 1.12, chests can't be placed directly next to each other.
     -- (I believe this got added in a later update.) However, we don't mine a
@@ -76,7 +76,7 @@ while true do
     if block.name ~= "minecraft:chest" then
         moved_for_chest = true
         turtle.turnLeft()
-        assert(turtle.advance())
+        assert(turtle.forward())
         turtle.turnRight()
         block_detected, block = turtle.inspect()
         assert(block.name == "minecraft:chest")
@@ -86,8 +86,8 @@ while true do
     -- return to mining position in next slot
     turtle.turnLeft()
     if not moved_for_chest then
-        turtle.advance()
+        turtle.forward()
     end
     turtle.turnLeft()
-    turtle.advance()
+    turtle.forward()
 end
