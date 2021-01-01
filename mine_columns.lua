@@ -8,6 +8,17 @@ local function get_free_inventory_slots()
     return free_slots
 end
 
+function try_refuel_if_needed()
+    for i = 1, 16 do
+        turtle.select(i)
+        if turtle.refuel(0) then -- it's valid fuel
+            while turtle.getFuelLevel() < turtle.getFuelLimit() and turtle.getItemCount(i) > 0 do
+                turtle.refuel(1)
+            end
+        end 
+    end
+end
+
 local function mine_column()
     local hit_bedrock = false
     local depth = 0
