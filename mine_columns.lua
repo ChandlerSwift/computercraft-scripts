@@ -63,8 +63,8 @@ while true do
     try_refuel_if_needed()
 
     -- deposit items into chest
-    turtle.rotateLeft()
-    turtle.rotateLeft()
+    turtle.turnLeft()
+    turtle.turnLeft()
     assert(turtle.advance())
 
     -- in minecraft 1.12, chests can't be placed directly next to each other.
@@ -75,19 +75,19 @@ while true do
     block_detected, block = turtle.inspect()
     if block.name ~= "minecraft:chest" then
         moved_for_chest = true
-        turtle.rotateLeft()
+        turtle.turnLeft()
         assert(turtle.advance())
-        turtle.rotateRight()
+        turtle.turnRight()
         block_detected, block = turtle.inspect()
         assert(block.name == "minecraft:chest")
     end
     deposit_inventory_into_chest()
 
     -- return to mining position in next slot
-    turtle.rotateLeft()
+    turtle.turnLeft()
     if not moved_for_chest then
         turtle.advance()
     end
-    turtle.rotateLeft()
+    turtle.turnLeft()
     turtle.advance()
 end
