@@ -30,12 +30,53 @@ local function mine_column()
     return hit_bedrock
 end
 
-how_far_forward = 0
-repeat
-    turtle.dig()
-    turtle.forward()
-    how_far_forward = how_far_forward + 1
-until not mine_column()
-for i=1, how_far_forward, 1 do
-    turtle.back()
+local function deposit_inventory_into_chest()
+    for slot=1, 16, 1 do
+        turtle.select(slot)
+        turtle.drop()
+    end
+end
+
+while true do
+    -- mine column and return
+    how_far_forward = 0
+    repeat
+        turtle.dig()
+        turtle.forward()
+        how_far_forward = how_far_forward + 1
+    until not mine_column()
+    for i=1, how_far_forward, 1 do
+        turtle.back()
+    end
+
+    try_refuel_if_needed()
+
+    -- deposit items into chest
+    turtle.rotateLeft()
+    turtle.rotateLeft()
+    assert(turtle.advance())
+
+    -- in minecraft 1.12, chests can't be placed directly next to each other.
+    -- (I believe this got added in a later update.) However, we don't mine a
+    -- full chest each pass, so I just populate at least one of every two chests
+    -- and check if we need to move to access one.
+    moved_for_chest = false
+    block_detected, block = turtle.inspect()
+    if block.name ~= "minecraft:chest" then
+        moved_for_chest = true
+        turtle.rotateLeft()
+        assert(turtle.advance())
+        turtle.rotateRight()
+        block_detected, block = turtle.inspect()
+        assert(block.name == "minecraft:chest")
+    end
+    deposit_inventory_into_chest()
+
+    -- return to mining position in next slot
+    turtle.rotateLeft()
+    if not moved_for_chest then
+        turtle.advance()
+    end
+    turtle.rotateLeft()
+    turtle.advance()
 end
